@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% include 'navbar.html' %} <!-- menna mekat thmi kiynne template inheritance kiyla , wena web page component ekk wage hdla api apita one krna onema web page ekaka  use krnwa-->
+    <h1><font color = "red">Home Template web page</font></h1>
+    <div>
+        {% for room in rooms %}
+            <div>
+                <h5>{{ room.id }} --> {{room.name}}</h5>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

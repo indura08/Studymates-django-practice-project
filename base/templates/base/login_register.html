@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% extends 'main.html' %}
+
+    {% block content %}
+
+    {% if page == 'login' %} <!-- page eka nama mokdda kila mekn check krla page eke namata adlawa thami mona div eke thiyna form ekd render wenne kiyla theeranaya krnne -->
+
+    <div>
+        <form action ="" method = "POST">
+            {% csrf_token %}
+    
+            <label>Username:</label><br>
+            <input type = "text" name = "username" placeholder="Enter your username.. "><br><br>
+    
+            <label>Password</label><br>
+            <input type = "password" name = "password" placeholder = "enter your passwor.."><br><br>
+    
+            <input type="submit" value = "Login">
+        </form>
+        
+        <p>Havent signed up yet? </p>
+        <a href = "{% url 'register' %}">Sign up</a>
+
+    </div>
+
+{% else %}
+
+    <div>
+        <form action ="" method = "POST">
+            {% csrf_token %}
+            
+            {{form.as_p}}
+
+            <input type="submit" value = "Register">
+        </form>
+
+        <p>already signed up? </p>
+        <a href = "{% url 'login' %}">Login</a>
+    
+    </div>
+
+    {% endif %}
+    
+    {% endblock content %}
+</body>
+</html>

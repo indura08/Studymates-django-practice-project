@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% extends "main.html" %}
+
+    {% block content %}
+
+    <h1>{{room.name}}</h1>
+    <p>{{room.description}}</p>
+
+    <div class = "comment-wrapper">
+        <h3>Conversation</h3>
+        <hr>
+
+        {% for message in room_messages %}
+
+        <div>
+            <small>@{{message.user}} {{message.created | timesince}} ago</small>
+            <p>{{message.body}}</p>
+            <hr>
+        </div>
+
+        {% endfor %}
+    </div>
+
+    {% if request.user.is_authenticated %}
+    <div class = "comment-form">
+        {% csrf_token %}
+        <form action =  "" method="POST">
+            <input type = "text" name = "body" placeholder="Write your message here...">
+
+        </form>
+        
+    </div>
+
+    {% endblock content %} <!-- menna me wage main.html ekeka watenna one widiya , structure eka daala eka xtends krnna puluwan mekat thami template inheritance kiynne -->
+</body>
+</html>
+
+<!-- 3:10:00 nawttuwe -->

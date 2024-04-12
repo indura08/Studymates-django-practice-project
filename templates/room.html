@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% extends "main.html" %}
+
+    {% block content %}
+    <h1>room template web page</h1>
+    <div>
+        {% for room in rooms %}
+            <div>
+                <h5>{{ room.id }} --> {{room.name}}</h5>
+            </div>
+        {% endfor %}
+    </div>
+    {% endblock content %} <!-- menna me wage main.html ekeka watenna one widiya , structure eka daala eka xtends krnna puluwan mekat thami template inheritance kiynne -->
+</body>
+</html>
