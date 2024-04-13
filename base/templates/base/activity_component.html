@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h3>Recent Activity</h3>
+            {% for message in room_messages %}
+
+            <div>
+                <small>@ {{message.user}} {{message.created | timesince}}</small>
+                <small>replied to: "{{message.room}}"</small>
+                
+                <p>{{message}}</p>
+
+                {% if request.user == message.user %}
+                    <a href = "{% url 'deleteMessage' message.id %}">Delete</a>
+                {% endif  %}
+
+                <hr>
+
+            </div>
+
+            {% endfor %}
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+      <div>
+        {% for room in rooms %}
+            <div>
+                {% if request.user == room.host %}
+                <a href = "{% url 'updateRoom' room.id %}">Edit</a>
+                <a href = "{% url 'deleteRoom' room.id %}">Delete</a><br>
+                {% endif %}
+                <a href = "{% url 'userProfile' room.host.id %}">@{{ room.host.username}}</a> <!--@{{ room.topic.name }} means you're telling Django: "Hey, I want to show room.topic.name here, but don't treat it as a variable or a special command, just display it as it is."-->
+
+                <h5>{{ room.id }} --> <a href = "{% url 'room' room.id %}">{{room.name}}</a></h5>
+                <small>@{{room.topic.name}}</small>
+
+                <hr>
+            </div>
+        {% endfor %} 
+      </div>
+</body>
+</html>

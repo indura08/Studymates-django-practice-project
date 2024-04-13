@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>StudyMates</title>
     <style>
         .home-container {
             display: grid;
-            grid-template-columns: 1fr 3fr;
+            grid-template-columns: 1fr 3fr 1fr; /* meke theruma awilla grid 3 k thiynwa , e thunen dekak 1/5 gaane bedenwa saha ekak 3/5 gaane bedenwa */
         }
     </style>
 </head>
@@ -16,43 +16,22 @@
     {% include 'navbar.html' %} <!-- menna mekat thmi kiynne template inheritance kiyla , wena web page component ekk wage hdla api apita one krna onema web page ekaka  use krnwa-->
     <h1><font color = "red">Home Template web page</font></h1>
     <div class = "home-container">
-        <div>
-            <h3>Browse Topics</h3>
-            <hr>
-
-            <div>
-                <a href = "{% url 'home' %}">All</a>
-            </div>
-
-            {%for topic in topics %}
-            <div>
-                <a href = "{% url 'home' %}?q={{topic.name}}">{{topic.name}}</a>
-            </div>
-            {% endfor %}
-
+        <div> 
+            {% include "base/topics_component.html" %}
         </div>
 
         <div>
             <h5>{{room_count}} rooms available</h5>
             <a href = "{% url 'createRoom' %}">Create a room</a> <!-- methna url kiyla denne path eke dunna url ekt adlalwa name atribute ekt deepu namai -->
-            {% for room in rooms %}
-            <div>
-                {% if request.user == room.host %}
-                <a href = "{% url 'updateRoom' room.id %}">Edit</a>
-                <a href = "{% url 'deleteRoom' room.id %}">Delete</a><br>
-                {% endif %}
-                <span>@{{ room.host.username}}</span> <!--@{{ room.topic.name }} means you're telling Django: "Hey, I want to show room.topic.name here, but don't treat it as a variable or a special command, just display it as it is."-->
-
-                <h5>{{ room.id }} --> <a href = "{% url 'room' room.id %}">{{room.name}}</a></h5>
-                <small>@{{room.topic.name}}</small>
-
-                <hr>
-            </div>
-            {% endfor %}
+          
+            {% include "base/feed_component.html" %}
         </div>
-        
+
+        <div>
+            {% include "base/activity_component.html "%}
+        </div>
     </div>
 </body>
 </html>
-
+<!-- #3:32 -->
 
