@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
-from .models import Rooms , Topic
+from .models import Rooms , Topic, Message
 from .forms import RoomForm
 
 # Create your views here.
@@ -78,13 +78,16 @@ def registerPage(request):
 
 def home(request):
         q = request.GET.get('q') if request.GET.get('q') != None else ''
-        rooms = Rooms.objects.filter(Q(topic__name__icontains=q) | Q(name__icontains=q) | Q(description__icontains=q)) #Rooms.objects.all()meken rooms  table ekt jhdpu okkoma record rooms kiyna variable eke save wenwa
+        rooms = Rooms.objects.filter(Q(topic__name__icontains=q) | 
+                                     Q(name__icontains=q) | 
+                                     Q(description__icontains=q)) #Rooms.objects.all()meken rooms  table ekt jhdpu okkoma record rooms kiyna variable eke save wenwa
        #methan me topic_name_icntains kiynne q query ekt adlwa thiyna text eka onema topic ekak thiynwa nm eka room variable ekt ganna kiyla, methna iconatins arunama startswith ends with wage ewath denna pulwuan
 
         topics = Topic.objects.all()
         room_count = rooms.count()
+        room_messages = Message.objects.filter(Q(room__topic__name__icontains = q))
 
-        return render(request, 'base/home.html' , {'rooms': rooms, 'topics' : topics , 'room_count': room_count}) 
+        return render(request, 'base/home.html' , {'rooms': rooms, 'topics' : topics , 'room_count': room_count , 'room_messages' : room_messages}) 
 
 def room(request,pk): #methan pk kiyl damma dynamic url routing widiyt url file eke denna puluwan <str:pk> widiyt (url file eka blnna)
        
@@ -95,11 +98,32 @@ def room(request,pk): #methan pk kiyl damma dynamic url routing widiyt url file 
 
 
        room = Rooms.objects.get(id=pk)  
-       room_messages = room.message_set.all().order_by('-created') # meke oredr by ekn krnne filter krna eka most recent messages ganna
+       room_messages = room.message_set.all() #.order_by('-created')/ # meke oredr by ekn krnne filter krna eka most recent messages ganna
+       participants = room.participants.all() #many to many relationship ekk participants la athar ha room arthar hdla  eka room view method ekt genaawa mekn
 
-       context = {'room': room , 'room_messages' : room_messages}
+
+       if request.method == "POST":
+              message = Message.objects.create(
+                     user = request.user,
+                     room = room,
+                     body = request.POST.get('messageBody')
+              )
+              room.participants.add(request.user)
+              return redirect('room', pk = room.id)
+
+       context = {'room': room , 'room_messages' : room_messages, 'participants' : participants}
        return render(request, 'base/room.html' , context)
 
+
+def userProfile(request, pk):
+       user = User.objects.get(id = pk)
+       print(user)
+       rooms = user.rooms_set.all() #from room_set, we can get all the childern of a specific object
+       room_messages = user.message_set.all()
+       topics = Topic.objects.all()
+
+       context  = {'user' : user, 'rooms' : rooms , "room_messages" : room_messages , 'topics' : topics }
+       return render (request, 'base/profile.html' , context)
 
 @login_required(login_url='login') #meka decorator ekak
 def createRoom(request):
@@ -145,5 +169,17 @@ def deleteRoom(request, pk):
               return redirect('home')
        return render (request, "base/delete.html" , {'obj': room} )
 
+@login_required(login_url='login')
+def deleteMessage(request, pk):
+       message = Message.objects.get(id=pk)
 
+       if request.user != message.user:
+              return HttpResponse('You are not allowed here!!')
+
+       if request.method == 'POST':
+              message.delete()
+              return redirect('home')
+       return render (request, "base/delete.html" , {'obj': message} )
+
+#3:51:00
        
